@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trading Journal - EURUSD Automatique (R & %)</title>
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --card-bg: #1e293b;
+            --accent-blue: #3b82f6;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --green-success: #10b981;
+            --red-danger: #ef4444;
+            --border: #334155;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            padding: 20px;
+        }
+
+        header {
+            margin-bottom: 25px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 15px;
+        }
+
+        h1 { font-size: 24px; font-weight: 600; }
+        p.subtitle { color: var(--text-muted); font-size: 14px; }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        @media (min-width: 1024px) {
+            .dashboard-grid {
+                grid-template-columns: 2fr 1fr;
+            }
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-box {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .stat-val { font-size: 20px; font-weight: bold; margin-top: 5px; }
+        .text-green { color: var(--green-success); }
+        .text-red { color: var(--red-danger); }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        input, select, button {
+            background-color: var(--bg-dark);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 10px;
+            border-radius: 6px;
+            outline: none;
+        }
+
+        button {
+            background-color: var(--accent-blue);
+            cursor: pointer;
+            font-weight: bold;
+            transition: opacity 0.2s;
+        }
+
+        button:hover { opacity: 0.9; }
+
+        .table-container {
+            overflow-x: auto;
+            margin-top: 15px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid var(--border);
+            font-size: 14px;
+        }
+
+        th { color: var(--text-muted); font-weight: 500; }
+
+        .chart-container {
+            height: 450px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>EUR/USD Auto-Strategy Dashboard</h1>
+        <p class="subtitle">Moniteur de performance strict : Analyse exclusive en % et R-Multiple</p>
+    </header>
+
+    <div class="dashboard-grid">
+        
+        <!-- Graphique et Logs -->
+        <div>
+            <!-- TradingView Widget BEGIN -->
+            <div class="card chart-container">
+                <div class="tradingview-widget-container" style="height:100%;width:100%">
+                    <div id="tradingview_eurusd" style="height:100%;width:100%"></div>
+                    <script type="text/javascript" src="https://tradingview.com"></script>
+                    <script type="text/javascript">
+                    new TradingView.widget({
+                        "autosize": true,
+                        "symbol": "FX:EURUSD",
+                        "interval": "60",
+                        "timezone": "Etc/UTC",
+                        "theme": "dark",
+                        "style": "1",
+                        "locale": "fr",
+                        "toolbar_bg": "#1e293b",
+                        "enable_publishing": false,
+                        "hide_side_toolbar": false,
+                        "allow_symbol_change": false,
+                        "container_id": "tradingview_eurusd"
+                    });
+                    </script>
+                </div>
+            </div>
+            <!-- TradingView Widget END -->
+
+            <div class="card">
+                <h2>Historique de l'Algorithme (EUR/USD)</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Date/Heure</th>
+                                <th>Type Stratégie</th>
+                                <th>Sens</th>
+                                <th>Performance (%)</th>
+                                <th>Ratio Capturé (R)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="journal-entries">
+                            <tr>
+                                <td>2026-10-19 14:22</td>
+                                <td>Breakout H1</td>
+                                <td><span class="text-green">BUY</span></td>
+                                <td class="text-green">+2.50 %</td>
+                                <td class="text-green">+2.5 R</td>
+                            </tr>
+                            <tr>
+                                <td>2026-10-19 09:15</td>
+                                <td>Mean Reversion</td>
+                                <td><span class="text-red">SELL</span></td>
+                                <td class="text-red">-1.00 %</td>
+                                <td class="text-red">-1.0 R</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistiques et Formulaire -->
+        <div style="display: flex; flex-direction: column; gap: 20px;">
+            
+            <div class="card">
+                <h2>Statistiques Globales</h2>
+                <div class="stats-row" style="margin-top: 15px;">
+                    <div class="stat-box">
+                        <p class="subtitle">Croissance (%)</p>
+                        <div class="stat-val text-green" id="stat-pct">+1.50 %</div>
+                    </div>
+                    <div class="stat-box">
+                        <p class="subtitle">R-Multiple Total</p>
+                        <div class="stat-val text-green" id="stat-r">+1.5 R</div>
+                    </div>
+                </div>
+                <div class="stats-row">
+                    <div class="stat-box">
+                        <p class="subtitle">Total Trades</p>
+                        <div class="stat-val" id="stat-total">2</div>
+                    </div>
+                    <div class="stat-box">
+                        <p class="subtitle">Win Rate</p>
+                        <div class="stat-val" id="stat-winrate">50%</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Simuler / Enregistrer un Trade</h2>
+                <form id="trade-form" style="margin-top: 15px;">
+                    <div class="form-group">
+                        <label class="subtitle">Nom du Robot / Setup</label>
+                        <select id="trade-strat">
+                            <option value="Breakout H1">Algo Breakout H1</option>
+                            <option value="Mean Reversion">Algo Mean Reversion</option>
+                            <option value="EMA Crossover">Algo EMA Crossover</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="subtitle">Direction</label>
+                        <select id="trade-side">
+                            <option value="BUY">BUY (Long)</option>
+                            <option value="SELL">SELL (Short)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="subtitle">Résultat en Pourcentage (%)</label>
+                        <input type="number" id="trade-pct" step="0.01" placeholder="Ex: 1.5 ou -1" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="subtitle">Ratio R généré (R)</label>
+                        <input type="number" id="trade-r" step="0.1" placeholder="Ex: 3 ou -1" required>
+                    </div>
+                    <button type="submit" style="width: 100%;">Ajouter au Journal</button>
+                </form>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script type="text/javascript">
+        const form = document.getElementById('trade-form');
+        const tbody = document.getElementById('journal-entries');
+
+        let tradesData = [
+            { pct: 2.50, r: 2.5, win: true },
+            { pct: -1.00, r: -1.0, win: false }
+        ];
+
+        function recalculateStats() {
+            let totalTrades = tradesData.length;
+            let wins = tradesData.filter(t => t.win).length;
+            let totalPct = tradesData.reduce((acc, t) => acc + t.pct, 0);
+            let totalR = tradesData.reduce((acc, t) => acc + t.r, 0);
+            
+            let winRate = totalTrades > 0 ? Math.round((wins / totalTrades) * 100) : 0;
+
+            document.getElementById('stat-total').innerText = totalTrades;
