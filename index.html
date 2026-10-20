@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="fr"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Journal de Trading</title>
+<title>THE10th Journal</title>
 <style>
 :root{--bg:#f4f5f9;--sd:#fff;--card:#fff;--line:#e6e8f0;--tx:#1d1b4b;--mu:#6b7090;--ac:#6c4fe0;--g:#3dbb87;--r:#e5605c;--b:#6c63ff;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 @media (prefers-color-scheme:dark){:root{--bg:#0b0d1a;--sd:#080a15;--card:#0f1428;--line:#252d4a;--tx:#e8eaf6;--mu:#8b93b5;--ac:#7c6cf0;--g:#2ecc9a;--r:#ef5b5b}}
@@ -9,6 +9,7 @@
 .app{display:flex;min-height:100vh}
 aside{width:200px;flex:none;background:var(--sd);border-right:1px solid var(--line);padding:16px 10px}
 .lg{font-weight:700;font-size:17px;margin:0 8px 16px;color:var(--ac)}
+.lgo{display:inline-flex;border:2px solid #f2b705;background:#020b1f}.lgo b{color:#f2b705;font-size:15px;line-height:1;padding:7px 10px;letter-spacing:.3px}.lgo b+b{border-left:2px solid #f2b705}
 nav button{display:block;width:100%;text-align:left;border:0;background:none;margin-bottom:4px}
 nav button.on{background:var(--ac);color:#fff}
 main{flex:1;min-width:0;padding:16px}
@@ -47,14 +48,14 @@ h3{margin:14px 0 6px;font-size:15px}
 .sc{height:8px;border-radius:6px;background:linear-gradient(90deg,#ef6c5b,#f2c94c,#3dbb87);position:relative;margin:8px 0}.sc i{position:absolute;top:-3px;width:14px;height:14px;border-radius:50%;background:#fff;border:3px solid var(--g);transform:translateX(-50%)}
 .k4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px}.k7{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:12px}.k7 .c{padding:8px 4px}
 @media(max-width:860px){.k4{grid-template-columns:1fr 1fr}.k7{grid-template-columns:repeat(4,1fr)}}
-.mw{flex:1;min-width:0}#tg{margin:10px 0 0 16px}.app.cl aside{display:none}
+.mw{flex:1;min-width:0}#tg{margin:10px 0 0 16px;background:none;border:0;padding:0;cursor:pointer}.app.cl aside{display:none}
 .gal{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}.ph{position:relative}.ph img{height:120px;border-radius:8px;border:1px solid var(--line);cursor:zoom-in;display:block}.ph button{position:absolute;top:4px;right:4px;padding:0 6px}
 .fb{border:1px solid var(--line);border-radius:8px;padding:6px 10px;cursor:pointer;display:inline-block;background:var(--card);white-space:nowrap}
 .zm{position:fixed;inset:0;background:rgba(0,0,0,.8);display:grid;place-items:center;z-index:50;cursor:zoom-out}.zm img{max-width:95%;max-height:95%}
 @media(max-width:860px){.dg{grid-template-columns:1fr}.cg{grid-template-columns:repeat(7,1fr) 62px;gap:3px}.cg .d{min-height:54px;padding:2px 3px;font-size:9px}.wc{padding:2px 4px}.wc .pill{display:none}}
 @media(max-width:860px){.app{flex-direction:column}aside{width:auto;border:0}nav{display:flex;gap:6px;overflow-x:auto}nav button{width:auto;white-space:nowrap}.k5,.yg{grid-template-columns:1fr 1fr}.g3,.g2,.m{grid-template-columns:1fr}.d{min-height:50px}}
 </style></head><body>
-<div class="app" id="app"><aside><div class="lg">📈 Mon Journal</div><nav id="nav"></nav></aside><div class="mw"><button id="tg" data-a="tg" title="Ouvrir / fermer le menu">☰ Menu</button><span id="um" style="margin-left:12px;display:inline-flex;gap:6px;align-items:center;flex-wrap:wrap"></span><main id="main"></main></div></div>
+<div class="app" id="app"><aside><nav id="nav"></nav><div class="lg" style="font-size:11px;margin:18px 8px 6px;color:var(--mu)">AFFICHAGE</div><div id="um" style="margin:0 8px;display:flex;gap:6px;flex-wrap:wrap;align-items:center"></div></aside><div class="mw"><button id="tg" data-a="tg" title="Ouvrir / fermer le menu"><span class="lgo"><b>TG</b><b>THE10th</b></span></button><main id="main"></main></div></div>
 <script>
 const K='journal_tz_v1',$=i=>document.getElementById(i);
 let S={t:[],j:{},pb:{},b:10000,gm:0,gy:0,r:100,u:'usd'},pg='dash',sc='month',cur=new Date(),sel='',ed=null,q='',jd='';cur.setDate(1);
