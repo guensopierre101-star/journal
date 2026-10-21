@@ -2,14 +2,6 @@
 <html lang="fr"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>THE10th Journal</title>
-
-<!-- Konfigirasyon pou fè l parèt tankou yon Aplikasyon (PWA) -->
-<link rel="manifest" href="data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22THE10th%20Journal%22%2C%22short_name%22%3A%22THE10th%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23f4f5f9%22%2C%22theme_color%22%3A%22%236c4fe0%22%2C%22icons%22%3A%5B%5D%7D">
-<meta name="theme-color" content="#6c4fe0">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="THE10th">
-
 <style>
 :root{--bg:#f4f5f9;--sd:#fff;--card:#fff;--line:#e6e8f0;--tx:#1d1b4b;--mu:#6b7090;--ac:#6c4fe0;--g:#3dbb87;--r:#e5605c;--b:#6c63ff;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 @media (prefers-color-scheme:dark){:root{--bg:#0b0d1a;--sd:#080a15;--card:#0f1428;--line:#252d4a;--tx:#e8eaf6;--mu:#8b93b5;--ac:#7c6cf0;--g:#2ecc9a;--r:#ef5b5b}}
@@ -112,7 +104,7 @@ kc('Gain moy. / perte moy.',s.al?(s.aw/s.al).toFixed(2):'–',`<span class="g">$
 `</div><div class="g3"><div class="c"><b>Score du journal : ${Math.round(ax.reduce((z,x)=>z+x[1],0)/5)}</b>${radar(ax)}</div><div class="c"><b>P&amp;L net cumulé</b>${cum(a)}</div><div class="c"><b>P&amp;L net par jour</b>${bars(d)}</div></div>`+
 cal()+`<div class="c tw"><b>Derniers trades</b><table>${rows(S.t.slice(-6))}</table></div>`}
 function jr(){const d=jd||iso(new Date()),j=S.j[d]||{},ts=S.t.filter(t=>t.d===d),ks=[...new Set([...Object.keys(S.j),...S.t.map(t=>t.d)])].sort().reverse().slice(0,40);
-return `<div class="g2"><div class="c"><b>Journal du ${d}</b><div class="st"><input type="date" id="jdt" value="${d}"><select id="jm">${[['','Humeur'],['+','😀 Bonne'],['0','😐 Neutre'],['-','😟 Difficile']].map(o=>`<option value="${o[0]}"${(j.m\vert{}\vert{}'')===o[0]?' selected':''}>${o[1]}</option>`).join('')Sch('')}</select></div>
+return `<div class="g2"><div class="c"><b>Journal du ${d}</b><div class="st"><input type="date" id="jdt" value="${d}"><select id="jm">${[['','Humeur'],['+','😀 Bonne'],['0','😐 Neutre'],['-','😟 Difficile']].map(o=>`<option value="${o[0]}"${(j.m||'')===o[0]?' selected':''}>${o[1]}</option>`).join('')}</select></div>
 <textarea id="jn" rows="9" style="margin-top:8px" placeholder="Plan, exécution, erreurs, leçons…">${esc(j.n)}</textarea>
 <div class="bar" style="margin-top:8px"><button class="on" data-a="jsave">Enregistrer</button><button data-a="addday" data-d="${d}">+ Trade ce jour</button></div>
 <p class="${cl(sum(ts))}">${ts.length?ts.length+' trade(s) : '+f(sum(ts)):'<span class="mu">Aucun trade ce jour.</span>'}</p></div>
@@ -136,4 +128,118 @@ return `<div class="hd"><button data-a="py">‹</button><h2>Année ${Y()}</h2><b
 <div class="bar" style="margin:10px 0"><button data-a="xj">Exporter JSON</button><button data-a="xc">Exporter CSV</button><button data-a="im">Importer (JSON collé)</button></div>
 <textarea id="io" rows="4" placeholder="Copie le texte exporté pour sauvegarder. Colle un JSON ici pour importer."></textarea><small id="msg" class="mu"></small></div>`}
 function pbk(){const names=[...new Set([...Object.keys(S.pb),...S.t.map(t=>t.s).filter(Boolean)])];
-return `<div class="c"><b>Nouveau setup</b><div class="st"><input id="pbn" placeholder="Nom du setup">
+return `<div class="c"><b>Nouveau setup</b><div class="st"><input id="pbn" placeholder="Nom du setup"><input id="pbr" placeholder="Règles d’entrée / sortie"><button class="on" data-a="pbadd">Ajouter</button></div></div><div class="g2" style="margin-top:12px">`+
+names.map(n=>{const s=st(S.t.filter(t=>t.s===n));return `<div class="c"><div class="kr"><b>${esc(n)}</b><button data-a="pbdel" data-n="${esc(n)}">✕</button></div><small>${s.n} trades · ${s.wr.toFixed(0)} % · PF ${pf(s)} · <span class="${cl(s.net)}">${f(s.net)}</span></small><textarea rows="3" data-pb="${esc(n)}" style="margin-top:8px" placeholder="Règles du setup…">${esc(S.pb[n])}</textarea></div>`}).join('')+'</div>'}
+const m0=n=>{const a=Math.abs(n);return (n<0?'-':'')+'$'+(a>=1000?(a/1000).toFixed(2).replace(/\.?0+$/,'')+'K':Math.round(a*100)/100)};
+const m$=n=>{const u=S.u||'usd';if(u==='usd'||!(S.r>0))return m0(n);const r=(n<0?'-':'')+(Math.round(Math.abs(n)/S.r*100)/100).toLocaleString('fr-FR')+' R';return u==='r'?r:m0(n)+` <small class='mu'>(${r})</small>`};
+function stk(v){let c=0,mw=0,ml=0,w=0,l=0;v.forEach(x=>{if(x>0){w++;l=0;c=c>0?c+1:1}else if(x<0){l++;w=0;c=c<0?c-1:-1}else{w=l=0;c=0}mw=Math.max(mw,w);ml=Math.max(ml,l)});return{c,mw,ml}}
+function gauge(w,b,l){const n=w+b+l,L=125.66,p='d="M10 50A40 40 0 0 1 90 50" fill="none" stroke-width="9"';let o=0;return `<svg viewBox="0 0 100 56" width="110"><path ${p} style="stroke:var(--line)"/>`+[[w,'g'],[b,'b'],[l,'r']].map(([k,c])=>{const s=n?`<path ${p} style="stroke:var(--${c})" stroke-dasharray="${k/n*L} ${L}" stroke-dashoffset="${-o*L}"/>`:'';o+=n?k/n:0;return s}).join('')+'</svg>'}
+function radar2(ax){const n=ax.length,pt=(i,k)=>{const a=(-90+360/n*i)*Math.PI/180;return[(120+Math.cos(a)*72*k).toFixed(1),(105+Math.sin(a)*72*k).toFixed(1)]},g=k=>ax.map((_,i)=>pt(i,k).join(',')).join(' ');
+return `<svg viewBox="0 0 240 210" style="width:100%;max-width:300px;display:block;margin:auto">`+[1,.75,.5,.25].map(k=>`<polygon points="${g(k)}" fill="none" style="stroke:var(--line)"/>`).join('')+`<polygon points="${ax.map((x,i)=>pt(i,x[1]/100).join(',')).join(' ')}" style="fill:var(--ac);fill-opacity:.35;stroke:var(--ac)" stroke-width="1.5"/>`+ax.map((x,i)=>{const p=pt(i,1.22);return `<text x="${p[0]}" y="${p[1]}" text-anchor="middle" font-size="9" style="fill:var(--mu)">${x[0]}</text>`}).join('')+'</svg>'}
+function cal2(){const fi=new Date(cur),s0=new Date(cur);const ofs=(fi.getDay()+6)%7;s0.setDate(1-ofs);const la=new Date(cur.getFullYear(),cur.getMonth()+1,0),rows=Math.ceil((ofs+la.getDate())/7),mt=S.t.filter(t=>t.d.startsWith(YM()));
+let h=['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'].map(x=>`<div class="dw">${x}</div>`).join('')+'<div class="wc" style="border:0"></div>';
+for(let r=0;r<rows;r++){let ws=[],wd=[];
+for(let c=0;c<7;c++){const d=new Date(s0);d.setDate(s0.getDate()+r*7+c);const k=iso(d),im=d.getMonth()===cur.getMonth(),ts=S.t.filter(t=>t.d===k),s=sum(ts),w=ts.filter(t=>t.v>0).length;ws.push(...ts);wd.push(k);
+h+=`<div class="d${im?'':' o'}${ts.length?(s>0?' p':s<0?' l':' z'):''}" data-a="day" data-d="${k}">${S.j[k]&&(S.j[k].n||S.j[k].m)?'<span style="float:left">📝</span>':''}${d.getDate()}${ts.length?`<b>${m$(s)}</b>${ts.length} trade${ts.length>1?'s':''}<i>${(w/ts.length*100).toFixed(1)} %</i>`:''}</div>`}
+const s=sum(ws),nd=new Set(ws.map(t=>t.d)).size;
+h+=`<div class="wc" style="cursor:pointer" data-a="wk" data-s="${wd[0]}" data-e="${wd[6]}"><small style="color:var(--ac)">Semaine ${isoW(wd[0])}</small><b class="${cl(s)}">${ws.length?m$(s):'$0'}</b><span class="pill">${nd} jour${nd>1?'s':''}</span></div>`}
+return `<div class="c"><div class="hd"><div class="kr" style="gap:8px"><button data-a="pm">‹</button><span style="font-weight:600;text-transform:capitalize">${cur.toLocaleDateString('fr-FR',{month:'long',year:'numeric'})}</span><button data-a="nm">›</button><button data-a="today">Ce mois</button></div><div class="kr" style="gap:8px"><small>Stats du mois :</small><span class="pill ${cl(sum(mt))}">${m$(sum(mt))}</span><span class="pill">${dsum(mt).length} jours</span></div></div><div class="cg">${h}</div></div>`}
+function dash2(){const a=sco(),s=st(a),d=dsum(a),dp=d.length?d.filter(x=>x[1]>0).length/d.length*100:0,
+w=a.filter(t=>t.v>0).length,be=a.filter(t=>t.v===0).length,lo=a.filter(t=>t.v<0).length,rf=s.dd?s.net/s.dd:(s.net>0?3:0),
+ax=[['Win %',s.wr],['Profit factor',Math.min(s.pf/3,1)*100],['Gain/Perte',s.al?Math.min(s.aw/s.al/2,1)*100:0],['Récupération',Math.max(0,Math.min(rf/3,1))*100],['Drawdown max',S.b?Math.max(0,100-s.dd/S.b*1000):50],['Régularité',dp]],
+scr=ax.reduce((z,x)=>z+x[1],0)/6,ds=stk(d.map(x=>x[1])),tk=stk(srt(a).map(t=>t.v)),
+sr=c=>`<span class="sr" style="border-color:var(--${c>=0?'g':'r'})">${Math.abs(c)}</span>`,
+pl=x=>`<div class="col" style="gap:3px"><span class="pill r">${x.ml} perdants</span><span class="pill g">${x.mw} gagnants</span></div>`,
+kc=(l,v,sub,x)=>`<div class="c"><div class="kr"><div><small>${l}</small><b>${v}</b><small>${sub}</small></div>${x||''}</div></div>`,
+bt=[['month','Mois affiché'],['year','Année'],['all','Tout']].map(([k,l])=>`<button data-a="sc" data-v="${k}" class="${sc===k?'on':''}">${l}</button>`).join('');
+return `<div class="hd"><h2 style="font-size:22px">Tableau de bord</h2><div class="bar" style="margin:0">${bt}</div></div><div class="k5">`+
+kc(`P&amp;L net <span class="pill">${s.n}</span>`,`<span class="${cl(s.net)}">${a.length?m$(s.net):'$0'}</span>`,'')+
+kc('Trade win %',s.wr.toFixed(2)+' %','',`<div style="text-align:center">${gauge(w,be,lo)}<div><span class="pill g">${w}</span> <span class="pill">${be}</span> <span class="pill r">${lo}</span></div></div>`)+
+`<div class="c"><small>Gain / perte moy. par trade</small><div class="kr" style="margin-top:6px"><b>${s.al?(s.aw/s.al).toFixed(2):'–'}</b><div style="flex:1;max-width:150px"><div class="hb" style="width:100%"><i style="width:${s.aw+s.al?s.aw/(s.aw+s.al)*100:50}%"></i></div><div class="kr"><small class="g">${m$(s.aw)}</small><small class="r">-${m$(s.al)}</small></div></div></div></div>`+
+kc('Profit factor',pf(s),'',rg(s.gw+s.gl?s.gw/(s.gw+s.gl)*100:0))+
+`<div class="c"><small>Série actuelle</small><div class="kr" style="margin-top:6px;align-items:flex-start"><div><small>JOURS</small><div class="kr" style="gap:6px">${sr(ds.c)}${pl(ds)}</div></div><div><small>TRADES</small><div class="kr" style="gap:6px">${sr(tk.c)}${pl(tk)}</div></div></div></div>`+
+`</div><div class="dg"><div class="col"><div class="c"><b>P&amp;L net cumulé</b>${cum(a)}</div><div class="c"><b>Score du journal</b>${radar2(ax)}<div class="kr"><div><small>Ton score</small><b>${scr.toFixed(2)}</b></div><div style="flex:1"><div class="sc"><i style="left:${scr}%"></i></div></div></div></div></div>${cal2()}</div>`}
+let wk=null,PF=[],IM={},DB=null;
+try{const ap=$('app');if(ap&&localStorage.getItem('journal_sb')==='1')ap.classList.add('cl')}catch(e){}
+try{const rq=indexedDB.open('jimg',1);rq.onupgradeneeded=()=>rq.result.createObjectStore('i',{keyPath:'k'});rq.onsuccess=()=>{DB=rq.result;DB.transaction('i').objectStore('i').getAll().onsuccess=e=>{e.target.result.forEach(r=>(IM[r.t]=IM[r.t]||[]).push(r));render()}}}catch(e){}
+const putImg=(t,d)=>{const r={k:t+'|'+Date.now()+Math.random().toString(36).slice(2,5),t:String(t),d};(IM[t]=IM[t]||[]).push(r);try{DB.transaction('i','readwrite').objectStore('i').put(r)}catch(e){}};
+const delImg=k=>{const t=k.split('|')[0];IM[t]=(IM[t]||[]).filter(x=>x.k!==k);try{DB.transaction('i','readwrite').objectStore('i').delete(k)}catch(e){}};
+const shrink=fl=>new Promise(res=>{const r=new FileReader();r.onload=()=>{const i=new Image();i.onload=()=>{const k=Math.min(1,1000/Math.max(i.width,i.height)),c=document.createElement('canvas');c.width=Math.round(i.width*k);c.height=Math.round(i.height*k);c.getContext('2d').drawImage(i,0,0,c.width,c.height);res(c.toDataURL('image/jpeg',.72))};i.onerror=()=>res(null);i.src=r.result};r.onerror=()=>res(null);r.readAsDataURL(fl)});
+async function addImgs(t,files){for(const x of files){const d=await shrink(x);if(d)putImg(t,d)}render()}
+function shots(ts){return ts.length?ts.map(t=>`<div class='c' style='margin-top:10px'><div class='kr'><span style='font-weight:600'>${esc(t.p)} ${t.x==='S'?'Short':t.x==='L'?'Long':''} <span class='${cl(t.v)}'>${f(t.v)}</span> <small>${esc(t.s)}</small></span><label class='fb'>+ Photo<input type='file' accept='image/*' multiple hidden data-t='${esc(t.id)}'></label></div><div class='gal'>${(IM[t.id]||[]).map(x=>`<div class='ph'><img src='${x.d}' data-a='zoom'><button data-a='rmimg' data-k='${esc(x.k)}'>✕</button></div>`).join('')||`<small class='mu'>Aucune photo pour ce trade.</small>`}</div></div>`).join(''):`<p class='mu'>Aucun trade ce jour.</p>`}
+function jr2(){const d=jd||iso(new Date());return jr()+`<h3>📸 Screenshots du ${d}</h3>`+shots(S.t.filter(t=>t.d===d))+`<div class='c tw' style='margin-top:12px'><b>Derniers trades</b><table>${rows(S.t.slice(-6))}</table></div>`}
+function wkp(){if(!wk)return'';const a=S.t.filter(t=>t.d>=wk.s&&t.d<=wk.e),s=st(a),d=dsum(a),dw=d.filter(x=>x[1]>0).length,bd=[...d].sort((x,y)=>y[1]-x[1]),c=(l,v,sub)=>`<div class='c'><small>${l}</small><b>${v}</b><small>${sub||'&nbsp;'}</small></div>`;
+return `<div class='hd'><button data-a='back'>← Retour au mois</button><h2 style='font-size:20px'>Semaine ${wk.n} · ${wk.s} → ${wk.e}</h2><span></span></div><div class='k5'>`+c('P&amp;L net',`<span class='${cl(s.net)}'>${a.length?m$(s.net):'$0'}</span>`,s.n+' trades')+c('Trade win %',s.wr.toFixed(1)+' %',a.filter(t=>t.v>0).length+' gagnants')+c('Day win %',(d.length?dw/d.length*100:0).toFixed(1)+' %',d.length+' jours')+c('Profit factor',pf(s),'gains ÷ pertes')+c('Gain / perte moy.',s.al?(s.aw/s.al).toFixed(2):'–',m$(s.aw)+' / -'+m$(s.al))+c('Drawdown max',`<span class='r'>${s.dd?'-'+m$(s.dd):'$0'}</span>`,'')+c('Meilleur jour',bd.length?`<span class='g'>${m$(bd[0][1])}</span>`:'–',bd.length?bd[0][0]:'')+c('Pire jour',bd.length?`<span class='r'>${m$(bd[bd.length-1][1])}</span>`:'–',bd.length?bd[bd.length-1][0]:'')+`</div><div class='g2'><div class='c'><b>P&amp;L cumulé</b>${cum(a)}</div><div class='c'><b>P&amp;L par jour</b>${bars(d)}</div></div><h3>Trades de la semaine</h3><div class='c tw'><table>${rows(a)}</table></div><h3>📸 Screenshots</h3>`+(d.map(([k])=>`<h3 class='mu' style='font-size:13px'>${k}</h3>`+shots(S.t.filter(t=>t.d===k))).join('')||`<p class='mu'>Aucun trade cette semaine.</p>`)}
+const isoW=k=>{const d=new Date(k+'T00:00'),t=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())),n=t.getUTCDay()||7;t.setUTCDate(t.getUTCDate()+4-n);return Math.ceil(((t-new Date(Date.UTC(t.getUTCFullYear(),0,1)))/864e5+1)/7)};
+const addD=(k,n)=>{const d=new Date(k+'T00:00');d.setDate(d.getDate()+n);return iso(d)};
+const monOf=k=>{const d=new Date(k+'T00:00');d.setDate(d.getDate()-(d.getDay()+6)%7);return iso(d)};
+const fdl=k=>new Date(k+'T00:00').toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'short',year:'numeric'});
+function wkp2(){if(!wk)return'';const a=S.t.filter(t=>t.d>=wk.s&&t.d<=wk.e),s=st(a),d=dsum(a),w=a.filter(t=>t.v>0).length,lo=a.filter(t=>t.v<0).length,dw=d.filter(x=>x[1]>0).length,bd=[...d].sort((x,y)=>y[1]-x[1]),N=['LUN','MAR','MER','JEU','VEN','SAM','DIM'],c=(l,v,sub)=>`<div class='c'><small>${l}</small><b>${v}</b><small>${sub||'&nbsp;'}</small></div>`;
+return `<div class='hd'><div><h2 style='font-size:22px'>Semaine ${isoW(wk.s)}</h2><small class='mu' style='text-transform:capitalize'>${fdl(wk.s)} → ${fdl(wk.e)}</small></div><div class='bar' style='margin:0'><button data-a='back'>← Mois</button><button data-a='wp'>‹</button><button data-a='wt'>Auj.</button><button data-a='wn'>›</button></div></div><div class='k4'>`+c('Trades',s.n,'/ 7 jours')+c('P&amp;L',`<span class='${cl(s.net)}'>${m$(s.net)}</span>`,d.length+' jours actifs')+c('Win rate',s.wr.toFixed(0)+' %',w+'W / '+lo+'L')+c('Profit factor',pf(s),'gains ÷ pertes')+`</div><div class='k7'>`+[...Array(7)].map((_,i)=>{const k=addD(wk.s,i),ts=S.t.filter(t=>t.d===k),v=sum(ts);return `<div class='c ${ts.length?(v>=0?'p':'l'):''}' style='text-align:center;cursor:pointer' data-a='day' data-d='${k}'><small>${N[i]}</small><b style='font-size:22px'>${+k.slice(8)}</b><small>${ts.length} trade${ts.length>1?'s':''}</small><br><span class='${cl(v)}' style='font-weight:600'>${m$(v)}</span></div>`}).join('')+`</div><div class='k4'>`+c('Day win %',(d.length?dw/d.length*100:0).toFixed(0)+' %',dw+' / '+d.length+' jours')+c('Gain / perte moy.',s.al?(s.aw/s.al).toFixed(2):'–',m$(s.aw)+' / -'+m$(s.al))+c('Drawdown max',`<span class='r'>${s.dd?'-'+m$(s.dd):'$0'}</span>`,'')+c('Meilleur / pire jour',bd.length?`<span class='g'>${m$(bd[0][1])}</span> / <span class='r'>${m$(bd[bd.length-1][1])}</span>`:'–',bd.length?bd[0][0]:'')+`</div><div class='g2'><div class='c'><b>P&amp;L cumulé</b>${cum(a)}</div><div class='c'><b>P&amp;L par jour</b>${bars(d)}</div></div><h3>Trades de la semaine</h3><div class='c tw'><table>${rows(a)}</table></div><h3>📸 Screenshots</h3>`+(d.map(([k])=>`<h3 class='mu' style='font-size:13px'>${k}</h3>`+shots(S.t.filter(t=>t.d===k))).join('')||`<p class='mu'>Aucun trade cette semaine.</p>`)}
+const jk=p=>{try{return localStorage.getItem('jk_'+p)||''}catch(e){return''}};
+const aCfg=()=>{try{return JSON.parse(localStorage.getItem('journal_ai_cfg')||'{}')}catch(e){return{}}};
+async function getSm(){const c=aCfg(),p=c.p||'auto';
+if(p==='auto'&&typeof claude!=='undefined'){const s=await claude.use('sample');if(s)return s}
+const pv=p==='auto'?(jk('gemini')?'gemini':jk('grok')?'grok':''):p;if(!pv||!jk(pv))return null;
+return async(msgs,o)=>{const key=jk(pv);let r,j;
+try{if(pv==='gemini'){r=await fetch('https://generativelanguage.googleapis.com/v1beta/models/'+encodeURIComponent(c.gm||'gemini-3.5-flash')+':generateContent',{method:'POST',headers:{'Content-Type':'application/json','x-goog-api-key':key},body:JSON.stringify({contents:msgs.map(m=>({role:m.role==='assistant'?'model':'user',parts:[{text:m.content}]}))})})}
+else{r=await fetch('https://api.x.ai/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},body:JSON.stringify({model:c.xm||'grok-4.7',messages:msgs})})}}
+catch(e){throw new Error('Impossible de joindre '+(pv==='gemini'?'Gemini':'Grok')+' (réseau, blocage CORS, ou page Claude qui bloque les appels externes). Essaie depuis GitHub Pages.')}
+j=await r.json().catch(()=>({}));if(!r.ok)throw new Error((j.error&&(j.error.message||JSON.stringify(j.error)))||('Erreur HTTP '+r.status));
+const t=pv==='gemini'?((((j.candidates||[])[0]||{}).content||{}).parts||[]).map(x=>x.text||'').join(''):(((j.choices||[])[0]||{}).message||{}).content;
+return{text:t||'(réponse vide)'}}}
+function aiCfg(){const c=aCfg(),p=c.p||'auto',ok=x=>jk(x)?'✓ clé enregistrée (…'+jk(x).slice(-4)+')':'aucune clé';
+return `<details class='c' style='margin-bottom:12px' ${jk('gemini')||jk('grok')?'':'open'}><summary style='cursor:pointer;font-weight:600'>⚙️ Réglages IA</summary><div class='st'><label><small>Fournisseur</small><select id='ai_p'>${[['auto','Auto (Claude intégré, sinon clé)'],['gemini','Gemini'],['grok','Grok (xAI)']].map(([k,l])=>`<option value='${k}'${p===k?' selected':''}>${l}</option>`).join('')}</select></label><label><small>Clé Gemini — ${ok('gemini')}</small><input type='password' id='ai_kg' placeholder='AIza…' autocomplete='off'></label><label><small>Modèle Gemini</small><input id='ai_gm' value='${esc(c.gm||'gemini-3.5-flash')}'></label><label><small>Clé Grok — ${ok('grok')}</small><input type='password' id='ai_kx' placeholder='xai-…' autocomplete='off'></label><label><small>Modèle Grok</small><input id='ai_xm' value='${esc(c.xm||'grok-4.7')}'></label></div><div class='bar' style='margin:10px 0 6px'><button class='on' data-a='aicfg'>Enregistrer</button><button data-a='aiclr'>Effacer les clés</button></div><small class='mu'>Les clés restent seulement dans ce navigateur : jamais dans le fichier ni dans l’export JSON. Ne les colle jamais dans le code sur GitHub. Dans la version Claude de la page, les appels vers Gemini/Grok sont bloqués : utilise-les sur GitHub Pages.</small></details>`}
+let AI=[],aiBusy=false;
+const QA=[['📅 Ma semaine','Analyse ma semaine en cours (lundi → dimanche) : résultats, discipline, erreurs, ce qui a bien marché.'],['🗓️ Mon mois','Fais le bilan de ce mois : statistiques clés, points forts et points faibles.'],['😟 Émotions','Quel lien y a-t-il entre mes émotions et mes résultats ? Quelles erreurs reviennent dans mes notes ?'],['🎯 Meilleur setup','Quels setups, paires et jours me réussissent le mieux ou le moins bien ? Que dois-je arrêter ou renforcer ?'],['📝 Plan','Donne-moi un plan concret de 5 règles pour la semaine prochaine, basé sur mes données.']];
+function ctx(){const T=srt(S.t),s=st(T),D=['dim','lun','mar','mer','jeu','ven','sam'],EM={'+':'positive','0':'neutre','-':'négative'},
+g=fn=>{const o={};T.forEach(t=>(o[fn(t)]=o[fn(t)]||[]).push(t));return Object.entries(o).map(([k,a])=>{const z=st(a);return `- ${k} : ${z.n} trades, win ${z.wr.toFixed(0)} %, PF ${pf(z)}, net ${f(z.net)}`}).join('\n')||'- (aucun)'};
+return `Aujourd'hui : ${iso(new Date())}. Affichage : ${S.u||'usd'}${S.u==='r'?'':' (1R = '+S.r+' $)'}.${S.u==='r'?' IMPORTANT : l’utilisateur ne veut pas montrer d’argent, parle uniquement en R, jamais en dollars.':''}\nGlobal : ${s.n} trades, win ${s.wr.toFixed(1)} %, PF ${pf(s)}, net ${f(s.net)}, drawdown max ${f(-s.dd)}, gain moyen ${f(s.aw)}, perte moyenne ${f(-s.al)}.\nPar setup :\n${g(t=>t.s||'sans setup')}\nPar paire :\n${g(t=>t.p)}\nPar jour :\n${g(t=>D[new Date(t.d+'T00:00').getDay()])}\nPar sens :\n${g(t=>t.x==='L'?'long':t.x==='S'?'short':'?')}\nPar émotion :\n${g(t=>EM[t.e]||'non notée')}\n40 derniers trades :\n`+T.slice(-40).map(t=>`${t.d} ${t.p} ${t.x||''} setup:${t.s||'-'} émo:${t.e||'-'} ${f(t.v)} ${(t.n||'').slice(0,120)}`).join('\n')+'\nNotes du journal récentes :\n'+(Object.entries(S.j).sort().slice(-15).map(([k,j])=>`${k} humeur:${j.m||'-'} ${(j.n||'').slice(0,250)}`).join('\n')||'(aucune)')}
+function aiDraw(){const el=$('aic');if(!el)return;el.innerHTML=AI.length?AI.map(m=>`<div style='margin:0 0 10px;${m.r==='user'?'text-align:right':''}'><span style='display:inline-block;max-width:92%;text-align:left;white-space:pre-wrap;padding:8px 10px;border-radius:10px;background:${m.r==='user'?'var(--ac)':'var(--bg)'};color:${m.r==='user'?'#fff':'var(--tx)'}'>${esc(m.c||'…').replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')}</span></div>`).join(''):`<p class='mu'>Pose une question ou choisis un bouton ci-dessus.</p>`;el.scrollTop=el.scrollHeight}
+async function aiAsk(q){q=(q||'').trim();if(aiBusy||!q)return;aiBusy=true;AI.push({r:'user',c:q},{r:'assistant',c:''});aiDraw();const last=AI[AI.length-1];
+try{const sm=await getSm();
+if(!sm)last.c='L’assistant IA n’est pas disponible ici. Ajoute une clé Gemini ou Grok dans « Réglages IA » ci-dessus pour l’utiliser ici.';
+else{const msgs=AI.slice(0,-1).map(m=>({role:m.r,content:m.c}));msgs[0].content='Tu es l’assistant d’un journal de trading. Réponds dans la langue de la question (créole haïtien, français ou anglais), de façon claire, concise et structurée, avec des chiffres concrets tirés des données. Analyse la discipline, la gestion du risque, les patterns, les erreurs récurrentes et propose des actions concrètes. Ne donne pas de signaux d’achat/vente ni de conseil financier personnalisé. Si les données sont insuffisantes, dis-le. N’invente rien.\n\nDONNÉES DU JOURNAL :\n'+ctx()+'\n\nQUESTION :\n'+msgs[0].content;
+const r=await sm(msgs,{onText:x=>{last.c=x.text;aiDraw()},modelTier:'default',cache:false});last.c=r.text}}
+catch(e){last.c='Erreur : '+((e&&(e.message||e.code))||'inconnue')}
+aiBusy=false;aiDraw()}
+function aip(){setTimeout(aiDraw,0);return `<div class='hd'><h2 style='font-size:22px'>🤖 Assistant IA</h2></div>${aiCfg()}<div class='c'><small class='mu'>Pose une question sur tes trades, tes émotions, tes setups… L’IA lit les données de ton journal (envoyées à Claude à chaque question). Ce n’est pas un conseil financier.</small><div class='bar' style='margin:10px 0'>`+QA.map(([l,q])=>`<button data-a='aiq' data-q='${esc(q)}'>${l}</button>`).join('')+`</div><div id='aic' style='height:380px;overflow:auto;border:1px solid var(--line);border-radius:8px;padding:10px;margin-bottom:8px'></div><div class='kr'><textarea id='aii' rows='2' placeholder='Écris ta question…'></textarea><button class='on' data-a='aisend'>Envoyer</button></div></div>`}
+const P=[['dash','📊 Tableau de bord'],['journal','📓 Journal quotidien'],['trades','🧾 Trades'],['reports','📈 Rapports'],['pb','📘 Playbook'],['ai','🤖 Assistant IA']];
+function render(){$('nav').innerHTML=P.map(([k,l])=>`<button data-a="nav" data-p="${k}" class="${k===(pg==='week'?'dash':pg)?'on':''}">${l}</button>`).join('');
+$('um').innerHTML=[['usd','$'],['r','R'],['both','$ + R']].map(([k,l])=>`<button data-a="um" data-m="${k}" class="${(S.u||'usd')===k?'on':''}">${l}</button>`).join('')+`<label class="mu" style="font-size:12px;display:flex;align-items:center;gap:4px">1R = $<input type="number" data-k="r" value="${S.r}" style="width:80px;padding:4px"></label>`;
+$('main').innerHTML={dash:dash2,journal:jr2,trades:tp,reports:rp,pb:pbk,week:wkp2,ai:aip}[pg]()}
+document.onclick=e=>{const t=e.target.closest('[data-a]');if(!t)return;const a=t.dataset.a,d=t.dataset;
+if(a==='nav')pg=d.p;else if(a==='sc')sc=d.v;else if(a==='today'){cur=new Date();cur.setDate(1)}
+else if(a==='wk'){wk={n:+d.n,s:d.s,e:d.e};pg='week'}
+else if(a==='back')pg='dash';
+else if(a==='aicfg'){const c={p:$('ai_p').value,gm:$('ai_gm').value.trim(),xm:$('ai_xm').value.trim()};try{localStorage.setItem('journal_ai_cfg',JSON.stringify(c));const g=$('ai_kg').value.trim(),x=$('ai_kx').value.trim();if(g)localStorage.setItem('jk_gemini',g);if(x)localStorage.setItem('jk_grok',x)}catch(e){}}
+else if(a==='aiclr'){try{localStorage.removeItem('jk_gemini');localStorage.removeItem('jk_grok')}catch(e){}}
+else if(a==='aiq'){aiAsk(d.q);return}
+else if(a==='aisend'){const i=$('aii'),q0=i.value;i.value='';aiAsk(q0);return}
+else if(a==='um'){S.u=d.m;save()}
+else if(a==='wp'){wk={s:addD(wk.s,-7),e:addD(wk.s,-1)}}
+else if(a==='wn'){wk={s:addD(wk.s,7),e:addD(wk.s,13)}}
+else if(a==='wt'){const m=monOf(iso(new Date()));wk={s:m,e:addD(m,6)}}
+else if(a==='tg'){const ap=$('app');ap.classList.toggle('cl');try{localStorage.setItem('journal_sb',ap.classList.contains('cl')?'1':'0')}catch(x){}return}
+else if(a==='zoom'){const z=document.createElement('div');z.className='zm';z.innerHTML='<img src="'+t.src+'">';z.onclick=()=>z.remove();document.body.appendChild(z);return}
+else if(a==='rmimg'){delImg(d.k)}
+else if(a==='pm')cur.setMonth(cur.getMonth()-1);else if(a==='nm')cur.setMonth(cur.getMonth()+1);
+else if(a==='py')cur.setFullYear(cur.getFullYear()-1);else if(a==='ny')cur.setFullYear(cur.getFullYear()+1);
+else if(a==='day'||a==='jopen'){jd=d.d;pg='journal'}
+else if(a==='addday'){sel=d.d;ed=null;pg='trades'}
+else if(a==='ym'){cur.setMonth(+d.m);sc='month';pg='dash'}
+else if(a==='edit'){ed=d.i;pg='trades'}
+else if(a==='del'){if(d.c!=='1'){t.dataset.c='1';t.textContent='Sûr ?';return}(IM[d.i]||[]).slice().forEach(x=>delImg(x.k));S.t=S.t.filter(z=>String(z.id)!==d.i);save()}
+else if(a==='jsave'){const k=$('jdt').value;S.j[k]={m:$('jm').value,n:$('jn').value};jd=k;save()}
+else if(a==='pbadd'){const n=$('pbn').value.trim();if(!n)return;S.pb[n]=$('pbr').value;save()}
+else if(a==='pbdel'){delete S.pb[d.n];save()}
+else if(a==='xj'){$('io').value=JSON.stringify(S);$('msg').textContent='Copie ce texte pour sauvegarder.';return}
+else if(a==='xc'){$('io').value='date,paire,sens,setup,emotion,pnl,note\n'+srt(S.t).map(t=>[t.d,t.p,t.x||'',t.s||'',t.e||'',t.v,'"'+(t.n||'').replace(/"/g,'""')+'"'].join(',')).join('\n');$('msg').textContent='Copie ce CSV.';return}
+else if(a==='im'){try{const o=JSON.parse($('io').value);if(Array.isArray(o))S.t=o;else if(o&&o.t)S={...S,...o};else throw 0;save()}catch(x){$('msg').textContent='JSON invalide.';return}}
+render()};
+document.onchange=e=>{const t=e.target;if(t.id==='ff'){PF=[...t.files];$('ffn').textContent=PF.length+' photo(s) prête(s)'}else if(t.dataset.t){addImgs(t.dataset.t,[...t.files])}else if(t.id==='jdt'){jd=t.value;render()}else if(t.dataset.k){S[t.dataset.k]=+t.value||0;save();render()}else if(t.dataset.pb!==undefined){S.pb[t.dataset.pb]=t.value;save()}};
+document.oninput=e=>{if(e.target.id==='sq'){q=e.target.value;$('tb').innerHTML=rows(S.t)}};
+document.onsubmit=e=>{e.preventDefault();const o={id:ed||Date.now()+'-'+Math.random().toString(36).slice(2,5),d:$('fd').value,p:$('fp').value||'EUR/USD',x:$('fx').value,v:$('fv').value!==''?parseFloat($('fv').value):parseFloat($('fr').value)*(S.r||0),s:$('fs').value.trim(),e:$('fe').value,n:$('fn').value};
+if(isNaN(o.v)||($('fv').value===''&&!(S.r>0)))return;if(ed)S.t=S.t.map(z=>String(z.id)===ed?o:z);else S.t.push(o);ed=null;sel=o.d;if(PF.length){addImgs(o.id,PF);PF=[]}cur=new Date(+o.d.slice(0,4),+o.d.slice(5,7)-1,1);save();render()};
+render();
+</script></body></html>
