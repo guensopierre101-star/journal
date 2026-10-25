@@ -90,6 +90,25 @@ aside,.c,.fb,button,.wd,.flw,.wcard,.d,.wc,.pill,.zm img{-webkit-backdrop-filter
 .sc i{background:#eef2fb}
 input,select,textarea{background:rgba(7,12,26,.6)}
 option{background:#0b1226;color:#eef2fb}
+
+/* ===== CALENDRIER DU MOIS : rouge doux/pâle (le reste garde la photo) ===== */
+.c:has(.cg),.c:has(.cal){position:relative;overflow:hidden;border:1px solid rgba(255,214,190,.35);
+ background:radial-gradient(ellipse 60% 45% at 78% 12%,rgba(255,214,150,.55) 0%,rgba(255,150,100,.34) 34%,rgba(220,80,70,0) 75%),
+ linear-gradient(180deg,rgba(60,14,22,.74) 0%,rgba(140,48,52,.66) 50%,rgba(205,92,78,.62) 100%);
+ box-shadow:0 0 22px rgba(255,120,90,.18);--mu:#ffe6da;--line:rgba(255,220,200,.28)}
+.c:has(.cg) .d,.c:has(.cal) .d,.c:has(.cg) .wc{background:rgba(40,10,14,.34)}
+.c:has(.cg) .d.p{background:color-mix(in srgb,var(--g) 32%,rgba(14,24,20,.6))}
+.c:has(.cg) .d.l{background:color-mix(in srgb,rgba(40,10,14,.55) 72%,var(--r))}
+.c:has(.cg) .d.z{background:color-mix(in srgb,var(--b) 26%,rgba(30,12,36,.6))}
+.c:has(.cg) .pill,.c:has(.cal) .pill{background:rgba(30,8,12,.5)}
+.c:has(.cg) button,.c:has(.cal) button{background:rgba(30,8,12,.42);border-color:rgba(255,220,200,.35)}
+/* ===== ESPACE PHOTO (barre gauche) ===== */
+body.cph::before{background:linear-gradient(rgba(4,8,18,.25),rgba(4,8,18,.35)),var(--ph) center/cover no-repeat}
+#fph{margin:18px 8px 0}#fph .t{font-size:11px;font-weight:700;color:var(--mu);margin-bottom:6px;letter-spacing:.3px}
+#fph .pv{height:90px;border-radius:10px;border:1px solid var(--line);background:#050913 center/cover no-repeat;margin-bottom:8px}
+#fph button{width:100%;margin-bottom:6px;font-size:12px;padding:6px 8px}
+body.mph .c:has(.cg),body.mph .c:has(.cal){background:linear-gradient(rgba(12,4,8,.28),rgba(12,4,8,.4)),var(--mph) center/cover no-repeat}
+#fph .pv{height:70px}
 </style></head><body>
 <div class="app" id="app"><aside><nav id="nav"></nav><div class="lg" style="font-size:11px;margin:18px 8px 6px;color:var(--mu)">AFFICHAGE</div><div id="um" style="margin:0 8px;display:flex;gap:6px;flex-wrap:wrap;align-items:center"></div></aside><div class="mw"><button id="tg" data-a="tg" title="Ouvrir / fermer le menu"><span class="lgo"><b>TG</b><b>THE10th</b></span></button><main id="main"></main></div></div>
 <script>
@@ -387,4 +406,23 @@ document.oninput=e=>{if(e.target.id==='sq'){q=e.target.value;$('tb').innerHTML=r
 document.onsubmit=e=>{e.preventDefault();const o={id:ed||Date.now()+'-'+Math.random().toString(36).slice(2,5),d:$('fd').value,p:$('fp').value||'EUR/USD',x:$('fx').value,v:$('fv').value!==''?parseFloat($('fv').value):parseFloat($('fr').value)*(S.r||0),s:$('fs').value.trim(),e:$('fe').value,n:$('fn').value,h:$('fh').value,en:$('fen').value,sl:$('fsl').value,tp:$('ftp').value,rs:$('frs').value,ck:[...document.querySelectorAll('[data-ck]:checked')].map(x=>x.dataset.ck),ckt:document.querySelectorAll('[data-ck]').length,cks:[...document.querySelectorAll('[data-ck]')].map(x=>x.dataset.ck)};
 if(isNaN(o.v)||($('fv').value===''&&!(S.r>0)))return;if(ed)S.t=S.t.map(z=>String(z.id)===ed?o:z);else S.t.push(o);ed=null;sel=o.d;if(PF.length){addImgs(o.id,PF);PF=[]}cur=new Date(+o.d.slice(0,4),+o.d.slice(5,7)-1,1);save();render()};
 render();
-</script></body></html>
+</script><script>
+(function(){const ae=document.querySelector('aside'),b=document.body;if(!ae)return;
+const g=k=>{try{return localStorage.getItem(k)}catch(e){return null}},s=(k,v)=>{try{v?localStorage.setItem(k,v):localStorage.removeItem(k)}catch(e){}};
+const SL=[{k:'the10_bgphoto',v:'--ph',c:'cph',t:'FOND PRINCIPAL',id:'a'},{k:'the10_monthphoto',v:'--mph',c:'mph',t:'FOND DU MOIS (calendrier)',id:'m'}];
+const d=document.createElement('div');d.id='fph';
+d.innerHTML=SL.map(o=>`<div class="t">${o.t}</div><div class="pv" id="pv${o.id}"></div><button id="c${o.id}">🖼️ Changer la photo</button><button id="r${o.id}">↩︎ Origine</button><input type="file" id="f${o.id}" accept="image/*" style="display:none">`).join('<div style="height:10px"></div>');
+ae.appendChild(d);
+const defA=getComputedStyle(b,'::before').backgroundImage.split(/,\s*(?=url)/).pop();
+const defM='linear-gradient(135deg,#3c0e16,#a8403f 55%,#e08a6a)';
+function ap(){SL.forEach(o=>{const p=g(o.k),pv=document.getElementById('pv'+o.id);
+ if(p){b.style.setProperty(o.v,'url('+p+')');b.classList.add(o.c);pv.style.backgroundImage='url('+p+')'}
+ else{b.classList.remove(o.c);pv.style.backgroundImage=o.id==='a'?defA:defM}})}
+ap();
+SL.forEach(o=>{
+ document.getElementById('c'+o.id).onclick=()=>document.getElementById('f'+o.id).click();
+ document.getElementById('r'+o.id).onclick=()=>{s(o.k,null);ap()};
+ document.getElementById('f'+o.id).onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const k=Math.min(1,1400/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=im.width*k;c.height=im.height*k;c.getContext('2d').drawImage(im,0,0,c.width,c.height);s(o.k,c.toDataURL('image/jpeg',.8));ap()};im.src=r.result};r.readAsDataURL(f);e.target.value=''}});
+})();
+</script>
+</body></html>
